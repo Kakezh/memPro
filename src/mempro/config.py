@@ -3,7 +3,7 @@ memPro Configuration
 """
 
 from typing import Literal, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class LLMProfile(BaseModel):
@@ -21,27 +21,38 @@ class StorageConfig(BaseModel):
 
 
 class HierarchyConfig(BaseModel):
-    max_theme_size: int = Field(default=50, ge=1, le=1000)
-    min_theme_coherence: float = Field(default=0.7, ge=0.0, le=1.0)
+    max_theme_size: int = 50
+    min_theme_coherence: float = 0.7
     auto_reorganize: bool = True
 
 
 class RetrievalConfig(BaseModel):
-    theme_top_k: int = Field(default=3, ge=1, le=20)
-    semantic_top_k: int = Field(default=5, ge=1, le=50)
-    max_tokens: int = Field(default=4000, ge=100, le=32000)
+    theme_top_k: int = 3
+    semantic_top_k: int = 5
+    max_tokens: int = 4000
 
 
 class ProactiveConfig(BaseModel):
     enabled: bool = False
-    monitor_interval: float = Field(default=1.0, ge=0.1, le=60.0)
+    monitor_interval: float = 1.0
     context_preload: bool = True
     intent_prediction: bool = True
 
 
 class MemoryConfig(BaseModel):
-    storage: StorageConfig = Field(default_factory=StorageConfig)
+    storage: StorageConfig = None
     llm: Optional[LLMProfile] = None
-    hierarchy: HierarchyConfig = Field(default_factory=HierarchyConfig)
-    retrieval: RetrievalConfig = Field(default_factory=RetrievalConfig)
-    proactive: ProactiveConfig = Field(default_factory=ProactiveConfig)
+    hierarchy: HierarchyConfig = None
+    retrieval: RetrievalConfig = None
+    proactive: ProactiveConfig = None
+    
+    def __init__(self, **data):
+        super().__init__(**data)
+        if self.storage is None:
+            self.storage = StorageConfig()
+        if self.hierarchy is None:
+            self.hierarchy = HierarchyConfig()
+        if self.retrieval is None:
+            self.retrieval = RetrievalConfig()
+        if self.proactive is None:
+            self.proactive = ProactiveConfig()

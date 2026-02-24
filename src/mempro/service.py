@@ -4,7 +4,6 @@ memPro MemoryService - Main Entry Point
 
 from typing import Optional, Any
 from datetime import datetime
-import uuid
 
 from mempro.config import MemoryConfig
 from mempro.models import (
@@ -48,16 +47,6 @@ class MemoryService:
     ) -> MemorizeResult:
         """
         Store a memory with automatic hierarchy classification.
-        
-        Args:
-            content: The content to remember
-            type: Type of memory (fact, preference, goal, constraint, event)
-            entities: Entity references for knowledge graph
-            confidence: Confidence score (0-1)
-            metadata: Additional metadata
-            
-        Returns:
-            MemorizeResult with IDs of created memories
         """
         if not self._initialized:
             await self.init()
@@ -114,24 +103,13 @@ class MemoryService:
     async def retrieve(
         self,
         query: str,
-        top_k: Optional[int] = None,
-        method: str = "rag",
+        top_k: int = 5,
     ) -> RetrieveResult:
         """
         Retrieve memories using semantic search.
-        
-        Args:
-            query: Search query
-            top_k: Maximum number of results
-            method: Retrieval method ("rag" or "llm")
-            
-        Returns:
-            RetrieveResult with matching memories
         """
         if not self._initialized:
             await self.init()
-
-        top_k = top_k or self.config.retrieval.semantic_top_k
 
         # Search semantics
         semantics = await self._store.search(query, MemoryLevel.SEMANTIC, top_k)
