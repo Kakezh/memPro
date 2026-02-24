@@ -1,0 +1,71 @@
+[project]
+name = "mempro"
+version = "0.1.0"
+description = "Proactive Memory Framework for AI Agents - 24/7 hierarchical memory system"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Kakezh" }]
+requires-python = ">=3.10"
+keywords = ["memory", "agent", "ai", "hierarchical", "proactive", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "pydantic>=2.0.0",
+    "typing-extensions>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+sqlite = ["aiosqlite>=0.19.0"]
+postgres = ["asyncpg>=0.28.0"]
+openai = ["openai>=1.0.0"]
+anthropic = ["anthropic>=0.18.0"]
+all = [
+    "mempro[dev,sqlite,postgres,openai,anthropic]",
+]
+
+[project.scripts]
+mempro = "mempro.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Kakezh/memPro"
+Documentation = "https://github.com/Kakezh/memPro#readme"
+Repository = "https://github.com/Kakezh/memPro"
+Issues = "https://github.com/Kakezh/memPro/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mempro"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
