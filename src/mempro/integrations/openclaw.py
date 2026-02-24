@@ -113,7 +113,7 @@ class OpenClawAdapter:
         stats = await self.service.stats()
         return {
             "total": stats.total,
-            "by_level": {k.value: v for k, v in stats.by_level.items()},
+            "by_level": stats.by_level,
         }
 
     async def close(self) -> None:
